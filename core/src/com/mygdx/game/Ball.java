@@ -101,8 +101,6 @@ public class Ball extends ApplicationAdapter {
 
 		}
 
-
-
 	}
 
 	public void drawScene() {
@@ -136,6 +134,7 @@ public class Ball extends ApplicationAdapter {
 			pillarDown.setPosition((float) (800 + Math.random()*100), 480-pillarDown.getHeight());
 			pillars.add(pillarDown);
 		}
+		System.out.println("added pillar");
 
 	}
 
