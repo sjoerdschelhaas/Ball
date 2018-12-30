@@ -222,11 +222,12 @@ public class BallScene extends ScreenAdapter {
         }
         pillars.remove(toRemove);
 
-
         PickUp toRemove3 = null;
         for(PickUp P : pickups) {
             P.update();
             if(P.sprite.getX() < -40){
+                toRemove3 = P;
+            } else if(ball.getBoundingRectangle().overlaps(P.sprite.getBoundingRectangle())){
                 toRemove3 = P;
             }
         }
@@ -291,7 +292,7 @@ public class BallScene extends ScreenAdapter {
         }
 
         for(PickUp P : pickups) {
-            P.draw(batch);
+                P.draw(batch);
         }
 
 
