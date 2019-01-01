@@ -161,7 +161,7 @@ public class BallScene extends ScreenAdapter {
         exitButton = new Sprite(new Texture("exit.png"));
         exitButton.setSize(75,75);
         exitButton.setOrigin(exitButton.getWidth() / 2, exitButton.getHeight() / 2);
-        exitButton.setPosition(400-exitButton.getOriginX(), 50-exitButton.getOriginY());
+        exitButton.setPosition(400, 50);
 
 
 

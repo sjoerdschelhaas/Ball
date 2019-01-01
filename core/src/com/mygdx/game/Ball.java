@@ -37,6 +37,7 @@ public class Ball extends Game //this is the main game class
 
         batch = new SpriteBatch();
         setScreen(new MenuScene(this));
+
     }
 
 

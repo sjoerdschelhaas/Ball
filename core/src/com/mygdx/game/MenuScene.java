@@ -21,6 +21,7 @@ public class MenuScene implements Screen {
 
     private Stage stage;
     private Ball game;
+    private BallScene gamescene;
     SpriteBatch batch;
 
     OrthographicCamera camera;
@@ -72,7 +73,12 @@ public class MenuScene implements Screen {
         playButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
-                game.setScreen(new BallScene(game));
+                gamescene=new BallScene(game);
+                gamescene.ball.setPosition(350-gamescene.ball.getWidth(), 240-gamescene.ball.getHeight());
+                game.setScreen(gamescene);
+                playButton.clearListeners();
+                exitButton.clearListeners();
+                optionsButton.clearListeners();
             }
         });
 
