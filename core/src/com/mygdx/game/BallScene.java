@@ -5,20 +5,25 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.*;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+
 
 import javax.swing.text.View;
 import java.util.ArrayList;
 
 public class BallScene extends ScreenAdapter {
+
+    float width;
+    float height;
 
     SpriteBatch batch;
     Texture background;
@@ -33,6 +38,8 @@ public class BallScene extends ScreenAdapter {
     Texture tapIndicator;
     Texture gameOver;
     ShapeRenderer shapeRenderer;
+
+
 
     //tap animation
     Animation<TextureRegion> tap;
@@ -50,7 +57,6 @@ public class BallScene extends ScreenAdapter {
 
     //flying object
     FlyingObject fly;
-
 
     //enum of different states in the game
     enum GameState {
@@ -72,6 +78,14 @@ public class BallScene extends ScreenAdapter {
     float spawnFreq2 = 3f;
     float spawnCounter2 = 0;
 
+    //score of the game
+    //score
+    private int score;
+    private String yourScoreName;
+    BitmapFont yourBitmapFontName;
+
+    //exitbutton
+    Sprite exitButton;
 
     Ball game;
 
@@ -80,6 +94,8 @@ public class BallScene extends ScreenAdapter {
         batch = game.batch;
         camera = game.camera;
         viewport = game.viewport;
+        width = game.screenWidth;
+        height = game.screenHeight;
         game.resize(game.screenWidth, game.screenHeight); //updates the viewport.
 
 
@@ -100,7 +116,7 @@ public class BallScene extends ScreenAdapter {
         ball = new Sprite(new Texture("ball.png"));
         ball.setSize(30, 30);
         ball.setOrigin(ball.getWidth() / 2, ball.getHeight() / 2);
-        ball.setPosition(400 - (ball.getWidth() / 2), 240 - (ball.getHeight() / 2));
+        ball.setPosition(width/2 - (ball.getWidth() / 2), height/2 - (ball.getHeight() / 2));
 
         //ball velocity
         ballVelocity = new Vector2(0, 0);
@@ -134,6 +150,22 @@ public class BallScene extends ScreenAdapter {
         pickups = new ArrayList<PickUp>();
         addPickUps();
 
+        //score of the game
+        score = 0;
+        yourScoreName = "Score: 0";
+        yourBitmapFontName = new BitmapFont();
+
+
+
+        //exitbutton
+        exitButton = new Sprite(new Texture("exit.png"));
+        exitButton.setSize(75,75);
+        exitButton.setOrigin(exitButton.getWidth() / 2, exitButton.getHeight() / 2);
+        exitButton.setPosition(400-exitButton.getOriginX(), 50-exitButton.getOriginY());
+
+
+
+
     }
 
     @Override
@@ -151,6 +183,7 @@ public class BallScene extends ScreenAdapter {
 
         animationTime += deltaTime / 3;
 
+
     }
 
     public void updateScene(float delta) {
@@ -163,13 +196,17 @@ public class BallScene extends ScreenAdapter {
             }
             if (gameState == GameState.GAME_OVER) {
                 gameState = GameState.INIT;
+                score = 0;
                 resetScene();
                 return;
             }
             // creates touch position. sets position to justtouched coordinates
             touchPosition.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+
             //converts coordinates to camera resolution
             camera.unproject(touchPosition);
+
+
         }
 
         // if gamestate == action, go to code below. Hij returnt als gamestate niet action is.
@@ -230,7 +267,9 @@ public class BallScene extends ScreenAdapter {
                 toRemove3 = P;
             } else if(ball.getBoundingRectangle().overlaps(P.sprite.getBoundingRectangle())){
                 toRemove3 = P;
-                //score += 10;
+                //increment score
+                score += 10;
+                yourScoreName = "score: " + score;
             }
         }
         pickups.remove(toRemove3);
@@ -260,6 +299,17 @@ public class BallScene extends ScreenAdapter {
             addPickUps();
             spawnCounter2 = 0;
         }
+
+
+        if(touchPosition.x > (exitButton.getBoundingRectangle().x) &&
+                (touchPosition.x < (exitButton.getBoundingRectangle().x + 75)) &&
+                (touchPosition.y > exitButton.getBoundingRectangle().y) &&
+                (touchPosition.y < exitButton.getBoundingRectangle().y + 75))
+        {
+
+            game.setScreen(new MenuScene(game));
+        }
+        System.out.println(touchPosition.x);
 
     }
 
@@ -311,8 +361,13 @@ public class BallScene extends ScreenAdapter {
             batch.draw(gameOver, 400 - 206, 240 - 80);
         }
 
-        batch.end();
+        //draws score
+        yourBitmapFontName.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+        yourBitmapFontName.draw(batch, yourScoreName, 25, 455);
 
+        //draw button
+        exitButton.draw(batch);
+        batch.end();
 
 
 		/*shapeRenderer.setProjectionMatrix(camera.combined);
@@ -356,7 +411,10 @@ public class BallScene extends ScreenAdapter {
         //pillars.clear();
         gameState = GameState.INIT;
         // set ball position at center of screen.
-        ball.setPosition(400, 240);
+        ball.setPosition(width/2 - 50, height/2);
+        pillars.clear();
+        flyingObjects.clear();
+        score = 0;
     }
 
 
