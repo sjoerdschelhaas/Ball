@@ -39,8 +39,6 @@ public class MenuScene implements Screen {
 
         game = aGame;
 
-
-
         batch = new SpriteBatch();
         stage = new Stage(new ScreenViewport(), batch);
 
@@ -82,6 +80,13 @@ public class MenuScene implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y){
                 Gdx.app.exit();
+            }
+        });
+
+        optionsButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y){
+                game.setScreen(new OptionScene(game));
             }
         });
 

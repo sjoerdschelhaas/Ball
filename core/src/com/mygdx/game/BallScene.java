@@ -138,6 +138,7 @@ public class BallScene extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+
         super.render(delta);
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -229,17 +230,18 @@ public class BallScene extends ScreenAdapter {
                 toRemove3 = P;
             } else if(ball.getBoundingRectangle().overlaps(P.sprite.getBoundingRectangle())){
                 toRemove3 = P;
+                //score += 10;
             }
         }
         pickups.remove(toRemove3);
 
         //update rectangle of ball. if ball and pillar overlap, game is over.
-        /*for (Pillar p : pillars) {
+        for (Pillar p : pillars) {
             if (ball.getBoundingRectangle().overlaps(p.sprite.getBoundingRectangle())) {
                 gameState = GameState.GAME_OVER;
             }
 
-        }*/
+        }
 
         for(FlyingObject f : flyingObjects){
             if(ball.getBoundingRectangle().overlaps(f.sprite.getBoundingRectangle())){
@@ -358,14 +360,14 @@ public class BallScene extends ScreenAdapter {
     }
 
 
-    /*@Override
+    @Override
     public void resize(int width, int height) {
         super.resize(width, height);
     }
 
     @Override
     public void dispose() {
-        batch.dispose();
+        super.dispose();
         background.dispose();
-    }*/
+    }
 }
